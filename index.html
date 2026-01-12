@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pa Gerrys POS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#16a34a" />
+</head>
+<body>
+  <section id="auth" class="controls" style="display:none">
+    <form id="login-form">
+      <div class="control" style="grid-column: span 3;">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="you@example.com" />
+      </div>
+      <div class="control" style="grid-column: span 3;">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="********" />
+      </div>
+      <button id="login-btn" type="button" class="primary">Login</button>
+      <button id="signup-btn" type="button" class="action">Create Account</button>
+      <button id="install-btn" type="button" class="action">Install App</button>
+    </form>
+  </section>
+
+  <div id="app" style="display:none">
+  <header class="app-header">
+    <div class="title">Pa Gerrys POS</div>
+    <div class="subtitle">Daily Moniepoint Transaction Tracker</div>
+    <div style="margin-top:8px">
+      <button id="logout-btn" class="action">Logout</button>
+    </div>
+  </header>
+
+  <section class="controls">
+    <div class="control">
+      <label for="date">Date</label>
+      <input type="date" id="date" />
+    </div>
+    <div class="control">
+      <label for="type">Type</label>
+      <select id="type">
+        <option value="withdrawal">Withdrawal</option>
+        <option value="transfer_in">Transfer In</option>
+        <option value="transfer_out">Transfer Out</option>
+      </select>
+    </div>
+    <div class="control">
+      <label for="amount">Amount (₦)</label>
+      <input id="amount" type="number" min="0" step="1" placeholder="0" />
+    </div>
+    <div class="control">
+      <label for="charge">Your Charge (₦)</label>
+      <input id="charge" type="number" min="0" step="1" placeholder="0" />
+    </div>
+    <div class="control preview">
+      <div id="preview-fee">Moniepoint Fee: ₦0</div>
+      <div id="preview-profit">Profit: ₦0</div>
+    </div>
+    <button id="add-btn" class="primary">Add Transaction</button>
+  </section>
+
+  <section class="controls" id="balances">
+    <div class="control">
+      <label for="opening-cash">Opening Cash (₦)</label>
+      <input id="opening-cash" type="number" min="0" step="1" placeholder="0" />
+    </div>
+    <div class="control">
+      <label for="additional-cash">Additional Cash (₦)</label>
+      <input id="additional-cash" type="number" min="0" step="1" placeholder="0" />
+    </div>
+    <div class="control">
+      <label for="opening-pos">Opening POS (₦)</label>
+      <input id="opening-pos" type="number" min="0" step="1" placeholder="0" />
+    </div>
+    <div class="control">
+      <label for="closing-cash">Closing Cash (₦)</label>
+      <input id="closing-cash" type="number" min="0" step="1" placeholder="0" />
+    </div>
+    <div class="control">
+      <label for="closing-pos">Closing POS (₦)</label>
+      <input id="closing-pos" type="number" min="0" step="1" placeholder="0" />
+    </div>
+    <button id="save-balances" class="primary">Save Balances</button>
+  </section>
+
+  <section class="summary">
+    <div class="summary-item">
+      <div class="label">Total Transactions</div>
+      <div id="sum-count" class="value">0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Total Amount</div>
+      <div id="sum-amount" class="value">₦0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Total Charges</div>
+      <div id="sum-charge" class="value">₦0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Total Moniepoint Fees</div>
+      <div id="sum-fee" class="value">₦0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Total Profit</div>
+      <div id="sum-profit" class="value profit">₦0</div>
+    </div>
+  </section>
+
+  <section class="summary" id="recon">
+    <div class="summary-item">
+      <div class="label">Opening Cash</div>
+      <div id="open-cash" class="value">₦0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Expected Close Cash</div>
+      <div id="exp-close-cash" class="value">₦0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Actual Close Cash</div>
+      <div id="act-close-cash" class="value">₦0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Opening POS</div>
+      <div id="open-pos" class="value">₦0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Expected Close POS</div>
+      <div id="exp-close-pos" class="value">₦0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Actual Close POS</div>
+      <div id="act-close-pos" class="value">₦0</div>
+    </div>
+  </section>
+
+  <section class="table-wrap">
+    <div class="table-controls">
+      <label for="filter-date">Filter Date</label>
+      <input type="date" id="filter-date" />
+      <button id="clear-day" class="danger">Clear Day</button>
+    </div>
+    <table class="transactions">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Your Charge</th>
+          <th>Moniepoint Fee</th>
+          <th>Profit</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
