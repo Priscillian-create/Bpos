@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pa Gerrys POS</title>
+  <title>Buisness POS</title>
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="%2316a34a"/><text x="16" y="21" font-size="14" font-family="Arial" font-weight="700" text-anchor="middle" fill="white">POS</text></svg>' />
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="manifest" href="manifest.json" />
@@ -14,11 +15,11 @@
     <form id="login-form">
       <div class="control" style="grid-column: span 3;">
         <label for="email">Email</label>
-        <input id="email" type="email" placeholder="you@example.com" />
+        <input id="email" type="email" autocomplete="email" placeholder="you@example.com" />
       </div>
       <div class="control" style="grid-column: span 3;">
         <label for="password">Password</label>
-        <input id="password" type="password" placeholder="********" />
+        <input id="password" type="password" autocomplete="current-password" placeholder="********" />
       </div>
       <button id="login-btn" type="button" class="primary">Login</button>
       <button id="signup-btn" type="button" class="action">Create Account</button>
@@ -28,7 +29,7 @@
 
   <div id="app" style="display:none">
   <header class="app-header">
-    <div class="title">Pa Gerrys POS</div>
+    <div class="title">Buisness POS</div>
     <div class="subtitle">Daily Moniepoint Transaction Tracker</div>
     <div style="margin-top:8px">
       <button id="logout-btn" class="action">Logout</button>

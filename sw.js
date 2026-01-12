@@ -1,13 +1,23 @@
-const CACHE_NAME = 'pagerrys-pos-v2';
-const ASSETS = ['styles.css','script.js','icon.svg'];
 self.addEventListener('install', (e) => {
   self.skipWaiting();
-  e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(ASSETS)));
+  const CACHE_NAME = 'pagerrys-pos-v3';
+  const ASSETS = ['styles.css','script.js','icon.svg'];
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(async (c) => {
+      await Promise.all(
+        ASSETS.map((p) =>
+          c.add(p).catch(() => null)
+        )
+      );
+    })
+  );
 });
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+      Promise.all(keys.map((k) => {
+        if (!k.startsWith('pagerrys-pos-v3')) return caches.delete(k);
+      }))
     ).then(() => self.clients.claim())
   );
 });
