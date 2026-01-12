@@ -386,9 +386,7 @@ logoutBtn?.addEventListener('click', async () => {
   await refreshAuth();
 });
 window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
   deferredPrompt = e;
-  if (authEl) authEl.style.display = '';
   installBtn.style.display = 'block';
 });
 installBtn?.addEventListener('click', async () => {
